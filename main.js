@@ -3,8 +3,34 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+const errorDiv = document.querySelector('#modal')
+const like_glyphs = document.getElementsByClassName('like-glyph')
 
+function changeOfHeart(e){
+  let promise = mimicServerCall()
+  promise.then(result => {
+    let heart = e.target
+    if(heart.textContent === EMPTY_HEART){
+    e.target.textContent = FULL_HEART
+    e.target.classList.add("activated-heart")
+  }else{
+    heart.textContent = EMPTY_HEART
+    heart.classList.remove("activated-heart")
+  }
+  
+}).catch(error => {
+  errorDiv.classList.remove("hidden")  
+  errorDiv.textContent = error
+   setTimeout(function(){
+    errorDiv.classList.add("hidden")
+   }, 3000)
+  //console.log(error.message)
+  })
+}
 
+for(let i =0; i < like_glyphs.length; i++){
+  like_glyphs[i].addEventListener("click", changeOfHeart)
+}
 
 
 //------------------------------------------------------------------------------
@@ -23,3 +49,8 @@ function mimicServerCall(url="http://mimicServer.example.com", config={}) {
     }, 300);
   });
 }
+
+//hide class so it doesnt load when the page does
+document.addEventListener('DOMContentLoaded', function(){
+  errorDiv.classList.add("hidden")
+})
